@@ -1,35 +1,11 @@
-import { MouseEvent } from "react";
-import { TableRow } from "../types";
+import * as React from "react";
 
-type SortBy = {
-  key: keyof TableRow;
+interface ISortIconProps {
   direction: "asc" | "desc";
-};
-
-export interface ISortIconProps {
-  sortBy: SortBy;
-  column: keyof TableRow;
-  onChangeHandler: any;
 }
 
-export const SortIcon = ({
-  sortBy,
-  column,
-  onChangeHandler,
-}: ISortIconProps): JSX.Element | null => {
-  if (column !== sortBy.key) return null;
-
-  const processClick = (e: MouseEvent<HTMLAnchorElement, any>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onChangeHandler(column);
-  };
-
+export const SortIcon = ({ direction }: ISortIconProps): JSX.Element => {
   return (
-    <div>
-      <a href="/" onClick={(e) => processClick(e)}>
-        {sortBy.direction === "asc" ? "ASC" : "DSC"}
-      </a>
-    </div>
+    <div>{direction === "asc" ? <span>&uarr;</span> : <span>&darr;</span>}</div>
   );
 };

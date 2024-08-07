@@ -1,42 +1,40 @@
 "use client";
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
-import { TableData, TableRow } from "../types";
+import { MouseEvent, useEffect, useState } from "react";
+import { SortBy, TableData, TableRow } from "../types";
 import axios from "axios";
-import { SortIcon } from "./SortIcon";
-
-type SortBy = {
-  key: keyof TableRow;
-  direction: "asc" | "desc";
-};
+import { SortHeader } from "./SortHeader";
+import { sortData } from "./utils";
 
 export interface Props {
   data: TableData;
 }
 
-export const PureTable = ({ data }: Props): JSX.Element => {
+/**
+ * This is a pure Table HTML Implementation using no 3rd party libraries.
+ */
+export const HTMLTable = ({ data }: Props): JSX.Element => {
   const [page, setPage] = useState(1);
-  const [sortBy, setSortBy] = useState<SortBy>({
-    key: "url",
-    direction: "asc",
-  });
+  const [sortBy, setSortBy] = useState<SortBy>();
   const [filteredData, setFilteredData] = useState(data);
 
   const increasePage = (e: MouseEvent<HTMLAnchorElement, any>) => {
     e.preventDefault();
     e.stopPropagation();
     setPage((prevState) => prevState + 1);
+    setSortBy(undefined); // Cleaning sort when switcing pages
   };
 
   const decreasePage = (e: MouseEvent<HTMLAnchorElement, any>) => {
     e.preventDefault();
     e.stopPropagation();
     setPage((prevState) => prevState - 1);
+    setSortBy(undefined); // Cleaning sort when switcing pages
   };
 
   const toggleSort = (key: keyof TableRow) => {
     setSortBy({
       key,
-      direction: sortBy.direction === "asc" ? "desc" : "asc",
+      direction: sortBy?.direction === "asc" ? "desc" : "asc",
     });
   };
 
@@ -52,20 +50,10 @@ export const PureTable = ({ data }: Props): JSX.Element => {
 
   useEffect(() => {
     if (sortBy) {
-      console.log(">>> sortBy", sortBy);
-      const sortedData = [...filteredData].sort((a, b) => {
-        if (a[sortBy.key] < b[sortBy.key])
-          return sortBy?.direction === "asc" ? -1 : 1;
-        if (a[sortBy.key] > b[sortBy.key])
-          return sortBy?.direction === "asc" ? 1 : -1;
-        return 0;
-      });
-
-      console.log(">>> filteredData", filteredData);
-      console.log(">>> sortedData", sortedData);
-
+      const sortedData = sortData(filteredData, sortBy);
       setFilteredData(sortedData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy]);
 
   return (
@@ -100,84 +88,68 @@ export const PureTable = ({ data }: Props): JSX.Element => {
         <thead>
           <tr>
             <th>
-              URL
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="url"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="url"
+                label="URL"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Scroll
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="avgScrollPercentage"
+                label="Scroll"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Time
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="time"
+                label="Time"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Bounce
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="bounce"
+                label="Bounce"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Enters
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="startsWithCount"
+                label="Enters"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Exits
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="endsWithCount"
+                label="Exits"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Page Views
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="totalCount"
+                label="Page Views"
+                onChangeHandler={toggleSort}
+              />
             </th>
             <th>
-              Visitors
-              {sortBy && (
-                <SortIcon
-                  sortBy={sortBy}
-                  column="totalCount"
-                  onChangeHandler={toggleSort}
-                />
-              )}
+              <SortHeader
+                sortBy={sortBy}
+                column="totalVisitorCount"
+                label="Visitors"
+                onChangeHandler={toggleSort}
+              />
             </th>
           </tr>
         </thead>
@@ -186,7 +158,11 @@ export const PureTable = ({ data }: Props): JSX.Element => {
             filteredData.map((row, idx) => {
               return (
                 <tr key={`row_${idx}`}>
-                  <td>{row.url}</td>
+                  <td>
+                    <a href={`http://${row.url}`} target="_blank">
+                      {row.url}
+                    </a>
+                  </td>
                   <td>{row.avgScrollPercentage}%</td>
                   <td>{row.avgScrollPercentage * row.totalVisitorCount}</td>
                   <td>
