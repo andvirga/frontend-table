@@ -5,7 +5,5 @@ interface ISortIconProps {
 }
 
 export const SortIcon = ({ direction }: ISortIconProps): JSX.Element => {
-  return (
-    <div>{direction === "asc" ? <span>&uarr;</span> : <span>&darr;</span>}</div>
-  );
+  return <>{direction === "asc" ? <span>&uarr;</span> : <span>&darr;</span>}</>;
 };

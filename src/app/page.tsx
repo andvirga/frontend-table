@@ -1,8 +1,9 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { HTMLTable } from "./components/HTMLTable";
+import { HTMLTable } from "./components/HTMLTable/HTMLTable";
 import axios from "axios";
 import { TableData } from "./types";
+import { ReactTable } from "./components/ReactTable/ReactTable";
 
 export default async function Home() {
   const response = await axios.get<TableData>(
@@ -12,6 +13,7 @@ export default async function Home() {
   return (
     <main className={styles.main}>
       <HTMLTable data={response.data} />
+      <ReactTable data={response.data} />
     </main>
   );
 }

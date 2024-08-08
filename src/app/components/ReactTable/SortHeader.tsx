@@ -1,6 +1,6 @@
-import { MouseEvent } from "react";
-import { SortBy, TableRow } from "../types";
+import { SortBy, TableRow } from "../../types";
 import { SortIcon } from "./SortIcon";
+import { Box, ButtonBase, Typography } from "@mui/material";
 
 export interface ISortHeaderProps {
   sortBy?: SortBy;
@@ -15,18 +15,20 @@ export const SortHeader = ({
   column,
   onChangeHandler,
 }: ISortHeaderProps): JSX.Element | null => {
-  const processClick = (e: MouseEvent<HTMLAnchorElement, any>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const processClick = () => {
     onChangeHandler(column);
   };
 
   return (
-    <div className="sort-header">
-      <a href="/" onClick={(e) => processClick(e)}>
-        {label}
-      </a>
+    <Box display="flex" flexDirection="row" alignItems="center" gap={0.5}>
+      <ButtonBase onClick={processClick}>
+        <Typography
+          sx={{ fontSize: 16, textTransform: "uppercase", fontWeight: 500 }}
+        >
+          {label}
+        </Typography>
+      </ButtonBase>
       {sortBy?.key === column && <SortIcon direction={sortBy.direction} />}
-    </div>
+    </Box>
   );
 };
