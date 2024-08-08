@@ -1,9 +1,9 @@
 "use client";
 import { MouseEvent, useEffect, useState } from "react";
-import { SortBy, TableData, TableRow } from "../types";
+import { SortBy, TableData, TableRow } from "../../types";
 import axios from "axios";
 import { SortHeader } from "./SortHeader";
-import { sortData } from "./utils";
+import { sortData } from "../utils";
 
 export interface Props {
   data: TableData;
@@ -21,14 +21,14 @@ export const HTMLTable = ({ data }: Props): JSX.Element => {
     e.preventDefault();
     e.stopPropagation();
     setPage((prevState) => prevState + 1);
-    setSortBy(undefined); // Cleaning sort when switcing pages
+    setSortBy(undefined); // Cleaning sort when switching pages
   };
 
   const decreasePage = (e: MouseEvent<HTMLAnchorElement, any>) => {
     e.preventDefault();
     e.stopPropagation();
     setPage((prevState) => prevState - 1);
-    setSortBy(undefined); // Cleaning sort when switcing pages
+    setSortBy(undefined); // Cleaning sort when switching pages
   };
 
   const toggleSort = (key: keyof TableRow) => {
@@ -58,6 +58,9 @@ export const HTMLTable = ({ data }: Props): JSX.Element => {
 
   return (
     <div className="table-container">
+      <div className="table-title">
+        <p>HTML Pure Table</p>
+      </div>
       <div className="paginator-wrapper">
         <div className="paginator">
           <p>Skip to the page: </p>

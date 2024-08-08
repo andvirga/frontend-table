@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Frontend Table Task
+
+This is a basic [Next.js](https://nextjs.org/) application that renders two tables, as requested in tech challenge.
 
 ## Getting Started
 
-First, run the development server:
+First, clone this repository:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+git clone https://github.com/andvirga/frontend-table
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then run these commands to install dependencies and launch the project
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+yarn && yarn dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Finally, open [http://localhost:3000](http://localhost:3000) with your browser to see the results.
 
-## Learn More
+### Page Contents
 
-To learn more about Next.js, take a look at the following resources:
+On the main page you will see two tables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- A pure HTML/CSS table, this was built without using any third party library, just pure HTML, CSS and React.
+- A MUI table, this was built using [Material-UI (MUI)](https://mui.com/material-ui/getting-started/) a popular library that implements Google´s Material Design and it's fully customizable.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Checklist
 
-## Deploy on Vercel
+#### Create a very simple Node.js app to host the files.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This was done using NextJS API Routes, the endpoint `http://localhost:3000/api?page=[PAGE_NUMBER]` accepts a page number and retrieves the paginated results for that page.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Implement the table layout.
+
+This is done in:
+
+- 'src/app/components/HTMLTable' (Pure HTML Table).
+- 'src/app/components/ReactTable' (React MUI Table).
+
+#### Implement the table functionality.
+
+Pagination, Sorting and going to an specific page functions are implemented in both versions.
+
+#### After you are happy with the solution, implement the same table in React.
+
+Done in 'src/app/components/ReactTable' (React MUI Table).
+
+#### Write a short debrief (8-10 sentences) on how you would improve this project further and/or any trade-offs you made to finish the project on time.
+
+Some trade-offs:
+
+- The Time column data isn't available in the provided JSON. Therefore, I decided to display an arbitrary calculation: `avgScrollPercentage * totalVisitorCount`. This wouldn't happen in a real project. In that case, I'd make sure to check with stakeholders to determine the proper value to display in that column.
+- Some optimizations were left out due to time constraints. There is room to refactor the `HTMLTable` and `ReactTable` components, splitting them into smaller components with fewer lines of code.
+- I've added basic validation on the page input located in the `ReactTable` component, but this can be improved to avoid hitting the API with an invalid page number.
+- Due to time constraints, the data-manipulation states (pagination and sorting) are duplicated in `HTMLTable` and `ReactTable`. This can be improved by using a single source of truth like the Context API.
+- I used my best judgment to meet all the requirements within the given time, but I am happy to explain potential improvements.
